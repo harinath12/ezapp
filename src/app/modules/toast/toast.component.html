@@ -1,0 +1,21 @@
+<!--<div *ngFor="let alert of alerts" class="{{cssClass(alert)}} alert-dismissable">
+        {{alert.message}}
+        <a class="close" (click)="removeAlert(alert)">&times;</a>
+    </div>-->
+<div class="rounded-pill" aria-live="polite" aria-atomic="true" style="position: relative;" attr.id="{{idx}}">
+    <div style="position: absolute; top: 40px; right: 0;">
+
+        <div class="toast {{tipoAlert}}" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+            <div class="toast-header">
+                <strong class="mr-auto">{{title}}</strong>
+                <small class="text-muted">just now</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                {{message}}
+            </div>
+        </div>
+    </div>
+</div>

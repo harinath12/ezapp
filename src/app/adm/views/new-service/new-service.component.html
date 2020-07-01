@@ -1,0 +1,102 @@
+<div class="card-user card">
+    <div class="card-header">
+        <h2 class="card-title">{{title}}</h2>
+    </div>
+    <div class="card-body">
+        <form name="contextServiceForm" id="contextServiceForm" #contextServiceForm="ngForm" class="container">
+            <div class="row" *ngIf="!isNew">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Service ID</label>
+                        <input type="text" name="programId" disabled="" class="form-control" id="programId"
+                            name="programId" #programId="ngModel" [(ngModel)]="service.programId">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Service Name</label>
+                        <input type="text" name="programName" class="form-control" placeholder="Service Name"
+                            id="programName" name="programName" #firstName="ngModel" [(ngModel)]="service.programName"
+                            required>
+                        <app-show-errors [control]="programName" class="show-err"></app-show-errors>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="programType" class="control-label">Service Type</label>
+                        <select tabindex="-1" class="form-control" name="programType" id="programType"
+                            #programType="ngModel" [(ngModel)]="service.programType" required
+                            style="background-color: #27293d">
+                            <option [ngValue]="undefined" selected>Please Select</option>
+                            <option *ngFor='let list of listTypes' [(ngValue)]="list.cod">
+                                {{list.value}}
+                            </option>
+                        </select>
+                        <app-show-errors [control]="programType" class="show-err"></app-show-errors>
+                    </div>
+
+                    <!--<div class="form-group">
+                        <label>Service Type</label>
+                        <input type="text" class="form-control" placeholder="Service Type" id="programType"
+                            name="programType" #programType="ngModel" [(ngModel)]="service.programType" required>
+                        <app-show-errors [control]="programType" class="show-err"></app-show-errors>
+                    </div>-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Capacity</label>
+                        <input type="number" class="form-control" placeholder="Capacity" id="capacity" name="capacity"
+                            #capacity="ngModel" [(ngModel)]="service.capacity" required>
+                        <app-show-errors [control]="capacity" class="show-err"></app-show-errors>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Default Time</label>
+                        <input type="text" class="form-control" placeholder="Default Time" id="averageTime"
+                            name="averageTime" #averageTime="ngModel" [(ngModel)]="service.averageTime" required>
+                        <app-show-errors [control]="averageTime" class="show-err"></app-show-errors>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Code</label>
+                        <input type="text" class="form-control" placeholder="Code" id="programCode" name="programCode"
+                            #programCode="ngModel" [(ngModel)]="service.programCode" required>
+                        <app-show-errors [control]="programCode" class="show-err"></app-show-errors>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <label class="form-check-label optional">
+                            <input id="activeFlag" name="activeFlag" type="checkbox" class="form-check-input"
+                                [(ngModel)]="service.activeFlag">
+                            <span class="form-check-sign"></span>Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="optional">Email instructions</label>
+                        <input type="text" class="form-control"
+                            placeholder="Email instructions to client for this service" id="notes" name="notes"
+                            #programCode="ngModel" [(ngModel)]="service.programDesc">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="update ml-auto mr-auto"><button (click)="saveService()" class="btn btn-primary"
+                        [disabled]="contextServiceForm.invalid">{{nameButton}}</button><button type="button"
+                        class="btn btn-info" (click)="cancelService()">Cancel</button></div>
+            </div>
+        </form>
+    </div>
+</div>

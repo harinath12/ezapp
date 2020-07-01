@@ -1,0 +1,72 @@
+<div class="card-user card">
+    <div class="card-header">
+        <h2 class="card-title">Assign Staff Services / Edit
+        </h2>
+    </div>
+    <div class="card-body">
+        <form name="contextForm" #contextForm="ngForm" class="container">
+            <div class="row" *ngIf="!isNew">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Select staff member and then use Select Service menu to select service.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select tabindex="-1" class="form-control" name="staff" id="staff" #role="ngModel"
+                            [(ngModel)]="staff.staffID" 
+                            (ngModelChange)="updateSelectedValueStaff($event)" style="background-color: #27293d"
+                            >
+                            <option [ngValue]="undefined" selected>Please Select</option>
+                            <option *ngFor='let staff of staffMain' [(ngValue)]="staff.staffID">
+                                {{staff.firstName}}, {{staff.lastName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select tabindex="-1" class="form-control" name="service" id="service" #role="ngModel"
+                            [(ngModel)]="service.programId" 
+                            (ngModelChange)="updateSelectedValueService($event)" style="background-color: #27293d"
+                            >
+                            <option [ngValue]="undefined" selected>Please Select</option>
+                            <option *ngFor='let service of serviceMain' [(ngValue)]="service.programId">
+                                {{service.programName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Service Qualifications for:
+                        </label>
+                        <ngx-datatable class="bootstrap selection-cell" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                        [rowHeight]="'auto'" [limit]="entries != -1 ? entries:undefined" [rows]="temp"  (activate)="onActivate($event)"
+                        [loadingIndicator]="isLoading">
+                        <ngx-datatable-column name="Service" prop="programName">{{programName}}</ngx-datatable-column>
+                        <ngx-datatable-column name="Time" prop="averageTime">{{averageTime}}</ngx-datatable-column>
+                        <ngx-datatable-column name="# Staff" prop="numStaff">{{numStaff}}</ngx-datatable-column>
+                        <ngx-datatable-column [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
+                            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+                              let-selectFn="selectFn">
+                              Actions
+                            </ng-template>
+                            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+                              let-onCheckboxChangeFn="onCheckboxChangeFn">
+                              <a href="#" class="btn btn-round btn-danger btn-icon btn-sm remove" (click)="deleteFunction($event)"><i
+                                  class="fas fa-times"></i></a>
+                            </ng-template>
+                          </ngx-datatable-column>
+                    </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

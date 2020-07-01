@@ -1,0 +1,123 @@
+<div class="card-user card">
+    <div class="card-header">
+        <h2 class="card-title">{{title}}</h2>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="pill" href="#profile">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#visits">Visits</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <br />
+            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <form name="contextGroupForm" id="contextGroupForm" #contextGroupForm="ngForm" class="container"
+                    novalidate>
+                    <div class="row" *ngIf="!isNew">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Client ID</label>
+                                <input type="text" name="clientID" disabled="" class="form-control" id="clientID"
+                                    name="clientID" #clientID="ngModel" [(ngModel)]="client.clientID">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" name="firstName" class="form-control" placeholder="First Name"
+                                    id="firstName" name="firstName" #firstName="ngModel" [(ngModel)]="client.firstName"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Middle Name</label>
+                                <input type="text" name="middleName" class="form-control" placeholder="Middle Name"
+                                    id="middleName" name="middleName" #middleName="ngModel"
+                                    [(ngModel)]="client.middleName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" name="lastName" class="form-control" placeholder="Last Name"
+                                    id="lastName" name="lastName" #lastName="ngModel" [(ngModel)]="client.lastName"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" name="email" class="form-control" placeholder="email" id="email"
+                                    name="email" #email="ngModel" [(ngModel)]="client.email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" name="phonNumber" class="form-control" placeholder="phonNumber"
+                                    id="phonNumber" name="phonNumber" #phonNumber="ngModel"
+                                    [(ngModel)]="client.phonNumber" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6" *ngIf="!isNew">
+                            <div class="form-group">
+                                <label>Registered Date</label>
+                                <input type="text" name="fReg" placeholder="fReg" disabled="" class="form-control"
+                                    id="fReg" #fReg="ngModel" [(ngModel)]="client.fReg" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="update ml-auto mr-auto"><button (click)="saveClient()" class="btn btn-primary"
+                                [disabled]="contextGroupForm.invalid">{{nameButton}}</button><button type="button"
+                                class="btn btn-info" (click)="cancelGroup()">Cancel</button></div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="visits" role="tabpanel" aria-labelledby="visits-tab">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>{{client.firstName + ' ' + client.lastName}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div ng-app ng-controller="Ctrl">
+                                {{myDate | date:'MM-dd-yyyy'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div ng-app ng-controller="Ctrl">
+                                Visits: {{numberAppts}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable class="bootstrap selection-cell" [columnMode]="'force'" [headerHeight]="50"
+                    [footerHeight]="50" [rowHeight]="'auto'" [limit]="entries != -1 ? entries:undefined" [rows]="temp"
+                    (activate)="onActivate($event)" [loadingIndicator]="isLoading">
+                    <ngx-datatable-column name="Date" prop="dtStart">{{dtStart}}</ngx-datatable-column>
+                    <ngx-datatable-column name="Service" prop="program">{{program}}</ngx-datatable-column>
+                    <ngx-datatable-column name="Staff" prop="staffName">{{staffName}}</ngx-datatable-column>
+                    <ngx-datatable-column name="Location">{{location}}</ngx-datatable-column>
+                    <ngx-datatable-column name="Notes">{{notes}}</ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+</div>

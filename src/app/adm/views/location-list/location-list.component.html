@@ -1,0 +1,77 @@
+<div class="card">
+    <div class="card-header">
+      <div class="row">
+        <h2 class="col-12 col-md-4 card-title">Location List</h2>
+        <div class="col-12 col-md-8 toolbar">
+          <button type="button" class="btn-simple btn btn-info float-right" (click)="exportFunction($event)"><i class="fas fa-file-excel"></i> Export to Excel</button>
+          <button type="button" class="btn-simple btn btn-success float-right" (click)="refreshFunction($event)"><i class="fas fa-sync-alt"></i> Refresh List</button>
+          <button type="button" class="btn-simple btn btn-primary float-right" [routerLink]="['/new-location']"
+            [routerLinkActive]="['linkActivo']"><i class="fas fa-plus"></i> Add New</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="dataTables_wrapper">
+        <div class="row">
+          <div class="col-6 col-md-4">
+            <div class="dataTables_length" id="datatable_length">
+              <label class="float-left" style="margin: 10px;"> Show</label>
+              <select name="datatable_length" aria-controls="datatable" class="form-control float-left align-middle form-control-md"
+                (change)="entriesChange($event)" style="width: 100px;">
+                <option value="10" [selected]="entries==10">10</option>
+                <option value="25" [selected]="entries==25">25</option>
+                <option value="-1" [selected]="entries==-1">All</option>
+              </select>
+              <label class="float-left" style="margin: 10px;"> entries </label>
+            </div>
+          </div>
+  
+          <div class="col-6 col-md-4">
+              <!--<div class="dataTables_length" id="datatable_status">
+              <i class="fas fa-filter float-left" style="margin: 10px 0;"></i>
+                <label class="float-left" style="margin: 10px;"> Status</label>
+                <select name="datatable_status" aria-controls="datatable" class="form-control float-left align-middle form-control-md"
+                  (change)="statusChange($event)" style="width: 100px;">
+                  <option value="true" [selected]="status==true">Active</option>
+                  <option value="false" [selected]="status==false">Inactive</option>
+                </select>
+              </div>-->
+            </div>
+  
+          <div class="col-12 col-md-4">
+            <div id="datatable_filter" class="dataTables_filter form-control-md">
+              <label>
+                <input type="search" class="form-control"  style="width: 100%;" placeholder="Search..." aria-controls="datatable"
+                  (keyup)="filterTable($event)" />
+              </label>
+            </div>
+          </div>
+        </div>
+  
+        <ngx-datatable class="bootstrap selection-cell" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+          [rowHeight]="'auto'" [limit]="entries != -1 ? entries:undefined" [rows]="temp" (activate)="onActivate($event)"
+          [loadingIndicator]="isLoading">
+          <ngx-datatable-column name="Location Name" prop="locationName">{{locationName}}</ngx-datatable-column>
+          <ngx-datatable-column name="City Name" prop="city">{{city}}</ngx-datatable-column>
+          <ngx-datatable-column name="State Name" prop="state">{{state}}</ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
+            <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+              let-selectFn="selectFn">
+              Actions
+            </ng-template>
+            <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+              let-onCheckboxChangeFn="onCheckboxChangeFn">
+              <a href="#" class="btn btn-round btn-warning btn-icon btn-sm edit" (click)="editFunction($event)">
+                <i class="fas fa-user-edit" style="margin-top: 7px;"></i>
+              </a>
+              <a href="#" class="btn btn-round btn-danger btn-icon btn-sm remove" (click)="deleteFunction($event)"><i
+                  class="fas fa-times" style="margin-top: 7px;"></i></a>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+  
+    </div>
+    <!-- end content-->
+  </div>
+  <!--  end card  -->

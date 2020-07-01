@@ -1,0 +1,118 @@
+<div class="card-user card">
+    <div class="card-header">
+        <h2 class="card-title">{{title}}</h2>
+    </div>
+    <div class="card-body">
+        <form name="locationForm" id="locationForm" #locationForm="ngForm" class="container" novalidate>
+
+            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row" *ngIf="!isNew">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Location ID</label>
+                            <input type="text" name="clientID" disabled="" class="form-control" id="locationId"
+                                name="locationId" #locationId="ngModel" [(ngModel)]="location.locationId">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select tabindex="-1" class="form-control" name="department" id="department"
+                                #department="ngModel" [(ngModel)]="location.departmentId" required aria-hidden="true"
+                                (ngModelChange)="updateSelectedValueDepartment($event)"
+                                style="background-color: #27293d">
+                                <option [ngValue]="undefined" selected>Please Select</option>
+                                <option *ngFor='let department of departmentMain' [(ngValue)]="department.DepartmentID">
+                                    {{department.DepartmentName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Location Name</label>
+                            <input type="text" name="locationName" class="form-control" placeholder="Location Name"
+                                id="locationName" #locationName="ngModel" [(ngModel)]="location.locationName" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" name="address" class="form-control" placeholder="Address" id="address"
+                                #address="ngModel" [(ngModel)]="location.address" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" name="city" class="form-control" placeholder="City" id="city"
+                                #city="ngModel" [(ngModel)]="location.city" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="state" class="control-label">State</label>
+                            <select tabindex="-1" class="form-control" name="state" id="state" #state="ngModel"
+                                [(ngModel)]="location.state" required style="background-color: #27293d">
+                                <option [ngValue]="undefined" selected>Please Select</option>
+                                <option *ngFor='let list of listStates' [(ngValue)]="list.cod">
+                                    {{list.value}}
+                                </option>
+                            </select>
+                            <app-show-errors [control]="programType" class="show-err"></app-show-errors>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Zip Code</label>
+                            <input type="text" name="zipCode" class="form-control" placeholder="Zip Code" id="zipCode"
+                                #zipCode="ngModel" [(ngModel)]="location.zipCode" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6" hidden>
+                        <div class="form-group">
+                            <label>Location Contact Info</label>
+                            <input type="text" name="locationContactInfo" class="form-control"
+                                placeholder="Location Contact Info" id="locationContactInfo"
+                                #locationContactInfo="ngModel" [(ngModel)]="location.locationContactInfo">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="PhoneNumber" class="form-control" placeholder="Phone Numberer"
+                                id="PhoneNumber" #PhoneNumber="ngModel" [(ngModel)]="location.PhoneNumber">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input id="active" name="active" type="checkbox" class="form-check-input"
+                                    [(ngModel)]="location.active">
+                                <span class="form-check-sign"></span>Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="update ml-auto mr-auto"><button (click)="saveClient()" [disabled]="locationForm.invalid"
+                            class="btn btn-primary">{{nameButton}}</button><button type="button" class="btn btn-info"
+                            (click)="cancelLocation()">Cancel</button></div>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/timegrid/main.css';
+
+form label.required:before {
+    color: red;
+    font-size: 1.2em;
+    content: "*   ";
+}
+
+.ng-touched.ng-invalid:not(form) {
+    border-color: red ;
+}
+
+.ng-invalid.ng-touched:not(form) {
+    border-color: red ;
+}
+  
+.form-control:focus.ng-invalid:not(form) {
+    border-color: #b96a70;
+    box-shadow: 0 0 0 0.1rem #b96a70;
+}
+
+form label.optional:after {
+    color: inherit;
+    font-size: 1em;
+    content: "   (optional)";
+}
+
+select {
+    background-color: #27293d!important;
+}
+select option {
+    margin: 10px 0!important;
+    padding: 10px 0!important;
+    font-size: 1.2em;
+}
+
+.fc-unthemed td.fc-today {
+    background: transparent;
+}
+
+
+.new-calender table thead.fc-head {
+    background: #27293d;
+    color: #fff;
+}
+
+ .fc-bg table tbody tr td:first-child {
+    border-bottom: 1px solid #fff;
+} 
+.fc-unthemed td {
+    border-color: #ffffff;
+}
+
+.fc-unthemed td:first-child {
+    color: #fff;
+}
+.event_Blocked_Time{
+  background: #666699 !important;
+ }
+.event_Active{
+  background: #00b386 !important;
+ }
+.event_No_Show{
+  background: #cc6697 !important;
+}
+.event_Arrived{
+  background: #ff33ff !important;
+  }
+.event_Completed{
+  background: #ff9933 !important;
+}
+.event_Hold{
+  background: #ff3333 !important;
+}
+.event_Cancelled{
+  background: #85adad !important;
+}
+.event_In_Progress{
+  background: #884dff !important;
+}
+.event_Assigned{
+  background: #ff3333 !important;
+}
+.event_Tentative{
+  background: #c2d6d6 !important;
+}
+.event_Declined{
+  background: #dfbf9f !important;  
+}
+.fc-resource-area{
+    width: 150px!important;
+}
+.fc-widget-content, .fc-bgevent-container{
+    height: 50px!important;
+}
+.card-user {
+    margin-top: -60px!important;
+}
+.fc-scroller{
+    height: auto !important;
+}
+.new-calender .fc-timeline-event{
+    display: block;
+    height: 37px!important;
+    color: #000!important;  
+    font-weight: bold!important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fc-bgevent{
+    
+    opacity: 0.9!important;
+}
+
+tr[data-time="09:30:00"] > td:not(:first-child)
+{
+  border-top: 1px dotted green !important;
+}
+.avail-slot-appt{
+  color: green;
+}
+.avail-slot-freeslot{
+  color: red;
+}
+.avail-slot-time{
+  text-decoration: underline;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

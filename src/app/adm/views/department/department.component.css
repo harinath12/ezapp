@@ -1,0 +1,27 @@
+li {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: yellow;
+    font-size: 2em;
+}
+
+.carta {
+    width: 200px;
+    margin: 0 20px;
+    padding: 10px;
+    font-style: italic;
+    float: left;
+}
+
+.carta .card-body {
+    background: #3358f4;
+    background: linear-gradient(0deg, #3358f4 0%, #1d8cf8 100%);
+}
+
+.dataTables_filter,
+.dataTables_length {
+    margin: 10px 0;
+}
+
+.toolbar button {
+    margin: 0 5px;
+}

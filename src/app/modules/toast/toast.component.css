@@ -1,0 +1,7 @@
+.toastMain {
+    z-index: 2050!important;
+}
+
+.toast {
+    width: 400px;
+}

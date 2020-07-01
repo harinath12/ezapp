@@ -1,0 +1,15 @@
+form label.required:before
+{
+    color: red;
+    content: " * ";
+}
+
+.ng-invalid:not(form)  {
+    border-color: red ;
+
+  }
+.form-control:focus.ng-invalid:not(form){
+    border-color: #b96a70 ;
+
+    box-shadow: 0 0 0 0.1rem #b96a70;
+  }

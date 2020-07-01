@@ -1,0 +1,43 @@
+ul.nav-pills {
+    margin-bottom: 50px;
+}
+
+ul.nav-pills .active{
+    box-shadow: 0px 5px 35px 0px #ffffff4d;
+}
+
+li.nav-item {
+    background-color: var(--gray-dark);
+    margin-right: 20px;
+    border-radius: 0.25rem;
+    -webkit-border-radius: 0.25rem;
+    -moz-border-radius: 0.25rem;
+    -ms-border-radius: 0.25rem;
+    -o-border-radius: 0.25rem;
+}
+
+li {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: yellow;
+    font-size: 1.2em;
+}
+
+.carta {
+    width: 200px;
+    margin: 0 20px;
+    padding: 10px;
+    font-style: italic;
+    float: left;
+}
+.carta .card-body {
+    background: #3358f4;
+    background: linear-gradient(0deg, #3358f4 0%, #1d8cf8 100%);
+}
+
+.dataTables_filter, .dataTables_length {
+    margin: 10px 0;
+}
+
+.toolbar button {
+    margin: 0 5px;
+}

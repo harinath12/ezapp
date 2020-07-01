@@ -1,0 +1,132 @@
+<div class="card-user card">
+    <div class="card-header">
+        <h2 class="card-title">Search Appointment</h2>
+    </div>
+    <div class="card-body">
+        <form name="reportAppointmentForm" class="container">
+            <div class="row">
+                <div class="col-8 col-lg-4">
+                    <div class="form-group">
+                        <label>Confirmation Number</label>
+                        <input type="number" name="confirmation" class="form-control" placeholder="First Name"
+                        #confirmationNumber="ngModel" [(ngModel)]="report.confirmationNumber" id="confirmation" name="confirmation">
+                        <!-- #confirmation="ngModel"
+                            [(ngModel)]="appointment.confirmation"
+                        <app-show-errors [control]="confirmation" class="show-err"></app-show-errors>-->
+                    </div>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" name="editStartDate" class="form-control" placeholder="Start Date"
+                        #startDate="ngModel" [(ngModel)]="report.startDate" id="editStartDate">
+                        <!--#editStartDate="ngModel" [(ngModel)]="tempDateTime.editStartDate"-->
+                    </div>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" name="editEndDate" class="form-control" placeholder="End Date"
+                        #endDate="ngModel" [(ngModel)]="report.endDate" id="editEndDate">
+                        <!--#editEndDate="ngModel" [(ngModel)]="tempDateTime.editEndDate"-->
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="clientId" class="control-label">Client Name</label>
+                    <select tabindex="-1" class="form-control" name="clientId" id="clientId"
+                        aria-hidden="true" (ngModelChange)="updateSelectedValueLocation($event)"
+                        style="background-color: #27293d;" #clientId="ngModel" [(ngModel)]="report.clientId">
+                        <!-- #clientName="ngModel"
+                        [(ngModel)]="appointment.locationID"-->
+                        <option [ngValue]="undefined" selected>Please Select</option>
+                        <option *ngFor='let client of clientMain' [(ngValue)]="client.clientID">
+                            {{client.lastName}}, {{client.firstName}} {{client.middleName}}
+                        </option>
+                    </select>
+                    <!--<app-show-errors [control]="clientName" class="show-err"></app-show-errors>-->
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="staffIds" class="control-label">Staff Name</label>
+                    <angular2-multiselect [data]="staffMain" [(ngModel)]="staffIds"
+                        [settings]="settingsStaff" id="staffIds" name="staffIds" style="z-index: 10001">
+                        <c-item>
+                            <ng-template let-item="item">
+                                <label style="color: #333;min-width: 150px;">{{item.itemName}}</label>
+                            </ng-template>
+                        </c-item>
+                    </angular2-multiselect>
+                    <!--<app-show-errors [control]="staffName" class="show-err"></app-show-errors>-->
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="locationsIds" class="control-label">Primary Location</label>
+                    <angular2-multiselect [data]="locationMain" [(ngModel)]="locationsIds"
+                        [settings]="settingsLocations" id="locationsIds" name="locationsIds" style="z-index: 10001">
+                        <c-item>
+                            <ng-template let-item="item">
+                                <label style="color: #333;min-width: 150px;">{{item.itemName}}</label>
+                            </ng-template>
+                        </c-item>
+                    </angular2-multiselect>
+                    <!--<app-show-errors [control]="location" class="show-err"></app-show-errors>-->
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="programId" class="control-label">Program Type</label>
+                    <select tabindex="-1" class="form-control" name="programId" id="programId"
+                        aria-hidden="true" (ngModelChange)="updateSelectedValueAppointment($event)"
+                        style="background-color: #27293d" #programId="ngModel" [(ngModel)]="report.programId">
+                        <!--#appointmentType="ngModel" [(ngModel)]="appointment.locationID" -->
+                        <option [ngValue]="undefined" selected>Please Select</option>
+                        <option *ngFor='let program of programMain' [(ngValue)]="program.programId">
+                            {{program.programName}}
+                        </option>
+                    </select>
+                    <!--<app-show-errors [control]="appointmentType" class="show-err"></app-show-errors>-->
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <label for="status" class="control-label">Status</label>
+                    <select tabindex="-1" class="form-control" name="status" id="status" aria-hidden="true"
+                        (ngModelChange)="updateSelectedValueStatus($event)" style="background-color: #27293d"
+                        #status="ngModel" [(ngModel)]="report.status">
+                        <!-- #status="ngModel"
+                        [(ngModel)]="appointment.status"-->
+                        <option [ngValue]="undefined" selected>Please Select</option>
+                        <option *ngFor='let statu of statusMain' [(ngValue)]="statu.tlkId">
+                            {{statu.tlkName}}
+                        </option>
+                    </select>
+                    <!--<app-show-errors [control]="status" class="show-err"></app-show-errors>-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="update ml-auto mr-auto">
+                    <button class="btn-simple btn btn-primary" (click)="reportSearch();"><i class="fas fa-search"></i> Search</button>
+                    <!-- [disabled]="contextForm.invalid"-->
+                    <button type="button" class="btn-simple btn btn-success" (click)="reportClean();"><i class="fas fa-sync-alt"></i> Clear</button>
+                    <button type="button" class="btn-simple btn btn-info"><i class="fas fa-file-excel"></i> Export</button>
+                </div>
+            </div>
+            <hr style="background-color: white; margin: 20px 0 5px 0;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <ngx-datatable class="bootstrap selection-cell" [rows]="rows"
+                            [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [selected]="selected"
+                            [selectionType]="SelectionType.checkbox" [selectAllRowsOnPage]="false" [limit]="10"
+                            [displayCheck]="displayCheck" (select)="onSelect($event)">
+                            <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false"
+                                [draggable]="false" [resizeable]="false" [headerCheckboxable]="true"
+                                [checkboxable]="true">
+                            </ngx-datatable-column>
+                            <ngx-datatable-column prop="dtStart" name="Date Start">{{dtStart}}</ngx-datatable-column>
+                            <ngx-datatable-column prop="dtEnd" name="Date End">{{dtEnd}}</ngx-datatable-column>
+                            <ngx-datatable-column prop="client" name="Client">{{client}}</ngx-datatable-column>
+                            <ngx-datatable-column prop="location" name="Location">{{location}}</ngx-datatable-column>
+                            <ngx-datatable-column prop="program" name="Program">{{program}}</ngx-datatable-column>
+                            <ngx-datatable-column prop="staffName" name="Staff Name">{{staffName}}</ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

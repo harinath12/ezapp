@@ -1,0 +1,164 @@
+<div class="card-user card">
+  <div class="card-header">
+      <h2 class="card-title">{{title}}</h2>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-3">
+        <label>Select Date</label>
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text"
+            class="form-control"
+            placeholder="yyyy-mm-dd"
+            value="{{ startDate | date:'dd-MM-yyyy' }}"
+            (bsValueChange)="onDateChange($event)"
+            #dp="bsDatepicker"
+            bsDatepicker [(bsValue)]="startDate" >
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-3">
+      <label>Groups</label>
+      <div class="form-group">
+        <div class="input-group">
+          <select class="form-control" id="groupSelect"  name="groupSelect" #groupSelect="ngModel" [(ngModel)]="myCalendar.groupID" (change)="getDepartmentData($event); getGroupLocationData($event);">
+            <option [ngValue]="" disabled>Select Group</option>
+            <option *ngFor="let group of groups" [(ngValue)]="group.groupID">
+              {{group.groupName}}
+            </option>
+          </select>
+        </div>
+      </div> 
+    </div>
+    <div class="col-lg-3">
+      <label>Departments</label>
+      <div class="form-group">
+        <div class="input-group">
+          <select class="form-control" id="departmentSelect"  name="departmentSelect" #departmentSelect="ngModel" [(ngModel)]="myCalendar.DepartmentID" (change)="getLocationData($event)">
+            <option [ngValue]="" disabled>Select Department</option>
+            <option *ngFor="let department of departments" [(ngValue)]="department.DepartmentID">
+              {{department.DepartmentName}}
+            </option>
+          </select>
+        </div>
+      </div> 
+    </div>
+    <div class="col-lg-3">
+      <label>Locations</label>
+      <div class="form-group">
+        <div class="input-group">
+          <select class="form-control" id="locationSelect"  name="locationSelect" #locationSelect="ngModel" [(ngModel)]="myCalendar.locationId" (change)="getLocationId($event)">
+            <option [ngValue]="" disabled>Select Location</option>
+            <option *ngFor="let location of locations" [(ngValue)]="location.locationId">
+              {{location.locationName}}
+            </option>
+          </select>
+        </div>
+      </div> 
+    </div>
+    <div class="col-lg-3" *ngIf="isServiceDataAvailable">
+      <label>Services</label>
+      <div class="form-group">
+        <div class="input-group">
+          <select class="form-control" id="serviceSelect"  name="serviceSelect" #serviceSelect="ngModel" [(ngModel)]="myCalendar.programId" (change)="getServiceId($event)">
+            <option [ngValue]="" disabled>Select Service</option>
+            <option *ngFor="let service of serviceList" [(ngValue)]="service.programId">
+                {{service.programName}}
+            </option>
+          </select>
+        </div>
+      </div> 
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="event-info" *ngIf="hoverEvent.appointmentid" [ngStyle]="{'top.px':hoverEvent.top, 'left.px': hoverEvent.left}">
+        <h4>{{hoverEvent.client}}</h4>
+        <p><b>Status:</b> {{hoverEvent.StatusName}}</p>
+        <p><b>Service:</b> {{hoverEvent.program}}</p>
+        <p><b>Location:</b> {{hoverEvent.location}}</p>
+        <p><b>Notes:</b> {{hoverEvent.notes}}</p>
+      </div>
+      <div class="row" *ngIf="isResch">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label>Reschedule appointment step 1: Click on 'OPEN' slot or 'BOOK' to reschedule appointment.</label>
+            </div>
+        </div>
+      </div>
+      <div *ngIf="isDataAvailable" class="new-calender">
+          <div class="custom-calendar row">
+            <div class="col-lg-2 staff-list">
+              <div class="cc-col cc-head">Staff</div>
+              <div class="cc-col" *ngFor="let staff of staffs | haveslots" [ngStyle]="{height: 50 + (availableSlots[staff.id].length * 24)+'px'}">
+                {{staff.title}}
+
+                <p *ngFor="let app of availableSlots[staff.id];">
+                  <span class="avail-slot-time">{{(app.startDate.split('T')[1].split(':')[0] > 12) ? (app.startDate.split('T')[1].split(':')[0]-12) : (app.startDate.split('T')[1].split(':')[0])}}:{{app.startDate.split('T')[1].split(':')[1]}} {{app.startDate.split('T')[1].split(':')[0] > 11 ? 'PM' : 'AM'}}</span>
+                  <span class="avail-slot-appt"> {{app.numAppts}} - </span>
+                  <span class="avail-slot-freeslot">{{app.freeSlots}} </span>
+                  <span class="avail-slot-book" (click)="newAppointment($event, todayStr, staff, app.startDate)">(BOOK)</span>
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-10 scrollable-container" id="scrollable-container" #scrollContainer>
+              <div class="row" [ngStyle]="{width: containerWidth+'px'}">
+                <div class="row" [ngStyle]="{width: dateListData[dt].width+'px'}" style="margin: 0" *ngFor="let dt of dateList2; index as i">
+                  <div [ngStyle]="{width: slotWidth+'px'}" class="timesplit cc-col cc-head" *ngFor="let tm of dateListData[dt].timeArr; index as j">
+                    <div *ngIf="j==0">{{dt | date:'MMM d'}}</div>
+                    <div *ngIf="j!=0"><br></div>
+                    <span *ngIf="tm<12"> {{tm-0}}am</span>
+                    <span *ngIf="tm==12">12pm</span>
+                    <span *ngIf="tm>12">{{tm-12}}pm</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row" *ngFor="let staff of staffs  | haveslots" [ngStyle]="{width: containerWidth+'px', height: 50 + (availableSlots[staff.id].length * 24)+'px'}">
+                
+                <div cdkDropList (cdkDropListDropped)="drop($event, dateListData[dt].renderStaffs[staff.id].appointments)" class="row" [ngStyle]="{width: dateListData[dt].width+'px'}" style="position: relative;margin: 0" *ngFor="let dt of dateList2; index as i">
+                  <div [ngStyle]="{width: slotWidth+'px'}" class="timesplit cc-col" *ngFor="let tm of dateListData[dt].timeArr; index as j">
+                    <div *ngIf="tm<12 && dateListData[dt].renderStaffs[staff.id].availableSlots.indexOf((tm-0)+':00AM') != -1"  class="availableslots"></div>
+                    <div *ngIf="tm==12 && dateListData[dt].renderStaffs[staff.id].availableSlots.indexOf('12:00PM') != -1" class="availableslots"></div>
+                    <div *ngIf="tm>12 && dateListData[dt].renderStaffs[staff.id].availableSlots.indexOf((tm-12)+':00PM') != -1" class="availableslots"></div>
+                    <span class="time-coor" (dblclick)="newAppointment($event, dt, staff, tm, 0)"></span>
+                    <span class="time-coor time-coor2" (dblclick)="newAppointment($event, dt, staff, tm, 15)"></span>
+                    <span class="time-coor time-coor3" (dblclick)="newAppointment($event, dt, staff, tm, 30)"></span>
+                    <span class="time-coor time-coor4" (dblclick)="newAppointment($event, dt, staff, tm, 45)"></span>
+                  </div>
+                  <div cdkDrag *ngFor="let event of dateListData[dt].renderStaffs[staff.id].appointments" class="events {{event.className}} {{event.start}}-{{event.end}}" (mouseover)="showAppointmentData($event, event)" (mouseout)="hideAppointmentData($event, event)" [ngStyle]="{width: event.width+'px', left: event.left+'px'}" (dblclick)="editAppointment($event, event)">
+                    <span>{{event.title}}</span><br>
+                    <span>{{event.location}}</span>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="event-info" *ngIf="hoverEvent.appointmentid" [ngStyle]="{'top.px':hoverEvent.top, 'left.px': hoverEvent.left}">
+        <h4>{{hoverEvent.client}}</h4>
+        <p><b>Status:</b> {{hoverEvent.StatusName}}</p>
+        <p><b>Service:</b> {{hoverEvent.program}}</p>
+        <p><b>Location:</b> {{hoverEvent.location}}</p>
+        <p><b>Notes:</b> {{hoverEvent.notes}}</p>
+      </div>
+      <div class="row" *ngIf="isResch">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label>Reschedule appointment step 1: Click on 'OPEN' slot or 'BOOK' to reschedule appointment.</label>
+            </div>
+        </div>
+      </div>
+      
+
+      <!-- <full-calendar (eventMouseEnter)="showAppointmentData($event, jsEvent, view)" (eventMouseLeave)="hideAppointmentData($event, jsEvent, view)" schedulerLicenseKey="0050257384-fcs-1571285095" [defaultDate]="startDate" [eventLimit]="false" [editable]="true" [selectable]="true" defaultView="resourceTimelineDay" (dateClick)="handleDateClick($event)" [plugins]="calendarPlugins" [resourceLabelText]="'Staffs'" [resources]="'https://fullcalendar.io/demo-resources.json?with-nesting&with-colors'" [events]="'https://fullcalendar.io/demo-events.json?single-day&for-resource-timeline'" [allDaySlot]="false" [slotEventOverlap]="false" (eventClick)="handleEventClick($event)" (eventRender)="handleEventRender($event)"></full-calendar> -->
+    </div>
+  </div>
+</div>

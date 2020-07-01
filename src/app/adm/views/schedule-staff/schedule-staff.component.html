@@ -1,0 +1,115 @@
+<div class="card-user card">
+    <div class="card-header">
+        <h2 class="card-title">Schedule Staff</h2>
+    </div>
+    <div class="card-body">
+        <form name="contextForm" #contextForm="ngForm" class="container" novalidate>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select tabindex="-1" class="form-control" name="group" id="group" #group="ngModel"
+                            [(ngModel)]="groupId" required aria-hidden="true"
+                            (ngModelChange)="updateSelectedValueGroup($event)" style="background-color: #27293d">
+                            <option [ngValue]="undefined" selected>Please Select Group</option>
+                            <option *ngFor='let group of groupMain' [(ngValue)]="group.groupID">
+                                {{group.groupName}}
+                            </option>
+                        </select>
+                        <app-show-errors [control]="group" class="show-err"></app-show-errors>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="!isNew">
+                <div class="col-12">
+                    <div class="form-group">
+                        <h6>Select staff member(s), choose all scheduling items to create availability schedule.
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <hr style="background-color: white;">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <ngx-datatable style="height: 500px;" class="bootstrap selection-cell" [rows]="rows"
+                            [columnMode]="ColumnMode.force" [headerHeight]="50" [rowHeight]="50" [selected]="selected"
+                            [selectionType]="SelectionType.checkbox" [selectAllRowsOnPage]="false"
+                            [displayCheck]="displayCheck" (select)="onSelect($event)" [scrollbarV]="true">
+                            <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false"
+                                [draggable]="false" [resizeable]="false" [headerCheckboxable]="true"
+                                [checkboxable]="true">
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="LastName">{{lastName}}</ngx-datatable-column>
+                            <ngx-datatable-column name="FirstName">{{firstName}}</ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <br><br>
+                    <div class="form-group">
+                        <label for="locationId" class="control-label">Primary Location</label>
+                        <select tabindex="-1" class="form-control" name="locationId" id="locationId"
+                            #locationId="ngModel" [(ngModel)]="schedule.locationId" required
+                            (ngModelChange)="updateSelectedValueLocation($event)" style="background-color: #27293d">
+                            <option [ngValue]="undefined" selected>Please Select Location</option>
+                            <option *ngFor='let location of locationMain' [(ngValue)]="location.locationId">
+                                {{location.locationName}}
+                            </option>
+                        </select>
+                        <app-show-errors [control]="location" class="show-err"></app-show-errors>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" name="editStartDate" class="form-control" placeholder="Start Date"
+                            id="editStartDate" #editStartDate="ngModel" [(ngModel)]="schedule.startDate" required>
+                        <app-show-errors [control]="editStartDate" class="show-err"></app-show-errors>
+                    </div>
+
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" name="editEndDate" class="form-control" placeholder="End Date"
+                            id="editEndDate" #firstName="ngModel" [(ngModel)]="schedule.endDate" required>
+                        <app-show-errors [control]="editEndDate" class="show-err"></app-show-errors>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" name="editStartTime" class="form-control" placeholder="Start Time"
+                            id="editStartTime" #editStartTime="ngModel" [(ngModel)]="schedule.startTime" required>
+                        <app-show-errors [control]="editStartTime" class="show-err"></app-show-errors>
+                    </div>
+
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" name="editEndTime" class="form-control" placeholder="End Time"
+                            id="editEndTime" #firstName="ngModel" [(ngModel)]="schedule.endTime" required>
+                        <app-show-errors [control]="editEndTime" class="show-err"></app-show-errors>
+
+                    </div>
+
+                </div>
+            </div>
+            <label>Select Days</label>
+            <div class="row" style="margin-bottom: 20px;">
+                <div style="float:left" *ngFor="let day of days">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input id="chkDays" name="chkDays" type="checkbox" class="form-check-input"
+                                [(ngModel)]="day.cod">
+                            <span class="form-check-sign"></span>{{day.content}}
+
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="update ml-auto mr-auto">
+                    <button class="btn btn-primary" (click)="saveSched()" [disabled]="contextForm.invalid">Save</button>
+
+                    <button type="button" class="btn btn-info" (click)="cancelSchedule()">Cancel</button></div>
+            </div>
+        </form>
+    </div>
+</div>
