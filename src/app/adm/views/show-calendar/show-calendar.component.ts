@@ -98,7 +98,7 @@ export class ShowCalendarComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>, appt) {
     moveItemInArray(appt, event.previousIndex, event.currentIndex);
-    console.log(event);
+    console.log(event, appt);
   }
 
   stafflistNames(groupId, departId?, locId?, dateId?) {

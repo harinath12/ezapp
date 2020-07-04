@@ -127,7 +127,7 @@
                     <span class="time-coor time-coor3" (dblclick)="newAppointment($event, dt, staff, tm, 30)"></span>
                     <span class="time-coor time-coor4" (dblclick)="newAppointment($event, dt, staff, tm, 45)"></span>
                   </div>
-                  <div cdkDrag *ngFor="let event of dateListData[dt].renderStaffs[staff.id].appointments" class="events {{event.className}} {{event.start}}-{{event.end}}" (mouseover)="showAppointmentData($event, event)" (mouseout)="hideAppointmentData($event, event)" [ngStyle]="{width: event.width+'px', left: event.left+'px'}" (dblclick)="editAppointment($event, event)">
+                  <div cdkDrag cdkDragBoundary="#scrollable-container" cdkDragLockAxis="x" *ngFor="let event of dateListData[dt].renderStaffs[staff.id].appointments" class="events {{event.className}} {{event.start}}-{{event.end}}" (mouseover)="showAppointmentData($event, event)" (mouseout)="hideAppointmentData($event, event)" [ngStyle]="{width: event.width+'px', left: event.left+'px'}" (dblclick)="editAppointment($event, event)">
                     <span>{{event.title}}</span><br>
                     <span>{{event.location}}</span>
                   </div>
