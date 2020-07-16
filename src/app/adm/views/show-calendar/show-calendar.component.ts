@@ -29,7 +29,7 @@ export class ShowCalendarComponent implements OnInit {
   title: string;
   isDataAvailable: boolean = false;
   isServiceDataAvailable: boolean = false;
-  startDate = '2020-05-27';//this.datepipe.transform(Date.now(), 'yyyy-MM-dd');
+  startDate = this.datepipe.transform(Date.now(), 'yyyy-MM-dd');
   dateId;
   staffs = [];
   appointments = [];
@@ -96,9 +96,55 @@ export class ShowCalendarComponent implements OnInit {
     });
   }
 
-  drop(event: CdkDragDrop<string[]>, appt) {
-    moveItemInArray(appt, event.previousIndex, event.currentIndex);
-    console.log(event, appt);
+  drop(event: CdkDragDrop<string[]>, dt, staff) {
+    //moveItemInArray(appt, event.previousIndex, event.currentIndex);
+    let iind = this.dateList2.indexOf(dt);
+    let minTime = new Date(this.dateListData[dt].dt+' '+this.dateListData[dt].minTime).getTime();
+    let maxTime = new Date(this.dateListData[dt].dt+' '+this.dateListData[dt].maxTime).getTime();
+    let currentEvent = this.dateListData[dt].renderStaffs[staff].appointments[event.previousIndex];
+    let currentSlotIndex = Math.round(currentEvent.left / (this.slotWidth/4));
+    let newIndex = Math.round(event.distance.x / (this.slotWidth/4));
+    let currentSlots = ((maxTime - minTime) / 900000);
+    let eventwidthSlot = Math.round(currentEvent.width / (this.slotWidth/4));
+    let newst, newed;
+    console.log(currentSlotIndex, newIndex, currentSlots);
+    if(currentSlots <= currentSlotIndex+newIndex){
+      console.log('nextDay');
+      let minTime = new Date(this.dateListData[this.dateList2[iind+1]].dt+' '+this.dateListData[this.dateList2[iind+1]].minTime).getTime();
+      let sl = currentSlotIndex+newIndex-currentSlots;
+
+      newst = minTime + (sl*900000);
+      newed = newst + (eventwidthSlot*900000);
+    } else if(newIndex < 0 && (currentSlotIndex + eventwidthSlot + newIndex) <= 0){
+      console.log('previousDay');
+      let maxTime = new Date(this.dateListData[this.dateList2[iind-1]].dt+' '+this.dateListData[this.dateList2[iind-1]].maxTime).getTime();
+      let sl = currentSlotIndex+newIndex;
+
+      newst = maxTime + (sl*900000);
+      newed = newst + (eventwidthSlot*900000);
+    } else {
+      newst = minTime + ((currentSlotIndex+newIndex)*900000);
+      newed = newst + (eventwidthSlot*900000);
+
+      if(newed > maxTime){
+        newed = maxTime;
+        newst = maxTime - (eventwidthSlot*900000);
+      }
+    }
+
+    let data = {
+      "DateID":currentEvent.data.DateID,
+      "appointmentid":currentEvent.data.appointmentid,
+      "dtEnd":this.datepipe.transform(newst,'MM-dd-yyyy HH:mm:ss a'),
+      "dtStart":this.datepipe.transform(newed,'MM-dd-yyyy HH:mm:ss a'),
+      "locationid":currentEvent.data.locationid,
+      "notes":"reschdule",
+      "programid":currentEvent.data.programid
+    };
+    let resourceId = currentEvent['resourceId'];
+    this.calendarService.rescheduleAppointment(resourceId, data).subscribe(res => {
+
+    });
   }
 
   stafflistNames(groupId, departId?, locId?, dateId?) {
@@ -208,10 +254,49 @@ export class ShowCalendarComponent implements OnInit {
           let app:any = {className: 'event_' + eachAppointmentList.StatusName, data: eachAppointmentList, id: eachAppointmentList.appointmentid, resourceId: eachStaff.id, start: moment(eachAppointmentList.dtStart, "MMM D YYYY h:mm a").format('YYYY-MM-DDTHH:mm:ss'), end: moment(eachAppointmentList.dtEnd, "MMM D YYYY h:mm a").format('YYYY-MM-DDTHH:mm:ss'), title: eachAppointmentList.client, backgroundColor: '#370D9D', location: eachAppointmentList.location, program: eachAppointmentList.program, textColor: '#FFFFFF' };
           app.widthRef = ((new Date(app.end).getTime() - new Date(app.start).getTime()) / 60000);
           app.width = app.widthRef * (this.slotWidth/60);
+
+          let filt = obj.renderStaffs[eachStaff.id].appointments.filter(a => {
+            let s2 = new Date(app.start).getTime();
+            let e2 = new Date(app.end).getTime();
+            let s1 = new Date(a.min).getTime();
+            let e1 = new Date(a.max).getTime();
+
+            return (s1 == s2 || e1 == e2 || (s1 < s2 && s2 < e1) || (s1 < e2 && e2 < e1));
+          });
+
+          if(filt.length){
+            app.index = filt[filt.length-1].index + 1;
+
+            let s1 = new Date(app.start).getTime();
+            let e1 = new Date(app.end).getTime();
+            let s2 = new Date(filt[filt.length-1].min).getTime();
+            let e2 = new Date(filt[filt.length-1].max).getTime();
+
+            app.min = Math.min(s1, s2);
+            app.max = Math.max(e1, e2);
+
+            eachStaff.maxIndex = Math.max(eachStaff.maxIndex, app.index);
+          } else {
+            app.index = 0;
+            app.min = new Date(app.start).getTime();
+            app.max = new Date(app.end).getTime();
+            eachStaff.maxIndex = 0;
+          }
           obj.renderStaffs[eachStaff.id].appointments.push(app);
         });
 
+        let h1 = 50 + (this.availableSlots[eachStaff.id].length * 24);
+        let h2 = 0;
+
+        if(eachStaff.maxIndex){
+          h2 = (eachStaff.maxIndex+1) * 40;
+        }
+
+        eachStaff.height = Math.max(h1, h2);
+
       });
+
+
 
       obj.minTime = new Date(Math.min(...time_stamps)).toTimeString().split(' ')[0];
       obj.maxTime = new Date(Math.max(...time_stamps)).toTimeString().split(' ')[0];
@@ -235,9 +320,10 @@ export class ShowCalendarComponent implements OnInit {
 
           appt.leftRef = ind;
           appt.left = appt.leftRef * (this.slotWidth/60);
+          appt.top = appt.index * 38;
         });
       });
-
+      obj.height = 
       obj.width = obj.timeArr.length * this.slotWidth;
       this.dateListData[dt] = obj;
 
@@ -335,10 +421,6 @@ export class ShowCalendarComponent implements OnInit {
                   });
                 });
 
-
-
-
-
                 obj.width = obj.timeArr.length * this.slotWidth;
                 this.containerWidth += obj.width;
                 this.dateList2.push(v);
@@ -403,7 +485,7 @@ export class ShowCalendarComponent implements OnInit {
   newAppointment(e, dt, staff, tm, slot){
     e.stopPropagation();
     let calendarData: any = {};
-    calendarData = {id: staff.id, name: staff.title, date: dt};
+    calendarData = {id: staff.id, name: staff.title, date: new Date(dt+' '+tm+":"+slot)};
     localStorage.setItem('calendar', JSON.stringify(this.myCalendar));
     localStorage.setItem('calendarData', JSON.stringify(calendarData));
     if(this.isResch){

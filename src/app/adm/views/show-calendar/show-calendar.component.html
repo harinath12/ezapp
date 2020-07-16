@@ -91,7 +91,7 @@
           <div class="custom-calendar row">
             <div class="col-lg-2 staff-list">
               <div class="cc-col cc-head">Staff</div>
-              <div class="cc-col" *ngFor="let staff of staffs | haveslots" [ngStyle]="{height: 50 + (availableSlots[staff.id].length * 24)+'px'}">
+              <div class="cc-col" *ngFor="let staff of staffs | haveslots" [ngStyle]="{height: staff.height+'px'}">
                 {{staff.title}}
 
                 <p *ngFor="let app of availableSlots[staff.id];">
@@ -115,19 +115,19 @@
                 </div>
               </div>
               
-              <div class="row" *ngFor="let staff of staffs  | haveslots" [ngStyle]="{width: containerWidth+'px', height: 50 + (availableSlots[staff.id].length * 24)+'px'}">
+              <div class="row" *ngFor="let staff of staffs  | haveslots" [ngStyle]="{width: containerWidth+'px', height: staff.height+'px'}">
                 
-                <div cdkDropList (cdkDropListDropped)="drop($event, dateListData[dt].renderStaffs[staff.id].appointments)" class="row" [ngStyle]="{width: dateListData[dt].width+'px'}" style="position: relative;margin: 0" *ngFor="let dt of dateList2; index as i">
+                <div cdkDropList (cdkDropListDropped)="drop($event, dt, staff.id)" class="row" [ngStyle]="{width: dateListData[dt].width+'px'}" style="position: relative;margin: 0" *ngFor="let dt of dateList2; index as i">
                   <div [ngStyle]="{width: slotWidth+'px'}" class="timesplit cc-col" *ngFor="let tm of dateListData[dt].timeArr; index as j">
                     <div *ngIf="tm<12 && dateListData[dt].renderStaffs[staff.id].availableSlots.indexOf((tm-0)+':00AM') != -1"  class="availableslots"></div>
                     <div *ngIf="tm==12 && dateListData[dt].renderStaffs[staff.id].availableSlots.indexOf('12:00PM') != -1" class="availableslots"></div>
                     <div *ngIf="tm>12 && dateListData[dt].renderStaffs[staff.id].availableSlots.indexOf((tm-12)+':00PM') != -1" class="availableslots"></div>
-                    <span class="time-coor" (dblclick)="newAppointment($event, dt, staff, tm, 0)"></span>
-                    <span class="time-coor time-coor2" (dblclick)="newAppointment($event, dt, staff, tm, 15)"></span>
-                    <span class="time-coor time-coor3" (dblclick)="newAppointment($event, dt, staff, tm, 30)"></span>
-                    <span class="time-coor time-coor4" (dblclick)="newAppointment($event, dt, staff, tm, 45)"></span>
+                    <span class="time-coor" (dblclick)="newAppointment($event, dt, staff, tm, '00')"></span>
+                    <span class="time-coor time-coor2" (dblclick)="newAppointment($event, dt, staff, tm, '15')"></span>
+                    <span class="time-coor time-coor3" (dblclick)="newAppointment($event, dt, staff, tm, '30')"></span>
+                    <span class="time-coor time-coor4" (dblclick)="newAppointment($event, dt, staff, tm, '45')"></span>
                   </div>
-                  <div cdkDrag cdkDragBoundary="#scrollable-container" cdkDragLockAxis="x" *ngFor="let event of dateListData[dt].renderStaffs[staff.id].appointments" class="events {{event.className}} {{event.start}}-{{event.end}}" (mouseover)="showAppointmentData($event, event)" (mouseout)="hideAppointmentData($event, event)" [ngStyle]="{width: event.width+'px', left: event.left+'px'}" (dblclick)="editAppointment($event, event)">
+                  <div data-id="{{kk}}"  cdkDrag cdkDragBoundary="#scrollable-container" cdkDragLockAxis="x" *ngFor="let event of dateListData[dt].renderStaffs[staff.id].appointments;index as kk" class="events {{event.className}} {{event.start}}-{{event.end}}" (mouseover)="showAppointmentData($event, event)" (mouseout)="hideAppointmentData($event, event)" [ngStyle]="{width: event.width+'px', left: event.left+'px', top: event.top+'px'}" (dblclick)="editAppointment($event, event)">
                     <span>{{event.title}}</span><br>
                     <span>{{event.location}}</span>
                   </div>
@@ -139,6 +139,7 @@
       </div>
 
     </div>
+
   </div>
   <div class="row">
     <div class="col-lg-12">
